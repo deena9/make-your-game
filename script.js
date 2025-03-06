@@ -2,11 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const gameContainer = document.getElementById("game-container");
     const scoreDisplay = document.getElementById("score");
     const livesDisplay = document.getElementById("lives");
+    const timerDisplay = document.getElementById("timer"); // Add this in your HTML
 
     let score = 0;
     let lives = 3;
     let ducks = [];
-    let difficulty = 1; // Ducks speed increases over time
+    let difficulty = 1;
+    let timeLeft = 60; // 1-minute timer
 
     // Crosshair settings
     const crosshair = document.createElement("div");
@@ -15,20 +17,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let crosshairX = window.innerWidth / 2;
     let crosshairY = window.innerHeight / 2;
-    let crosshairSpeed = 30; // Faster movement
+    let crosshairSpeed = 30;
 
     function updateCrosshairPosition() {
         crosshair.style.left = `${crosshairX}px`;
         crosshair.style.top = `${crosshairY}px`;
     }
 
+    const MAX_DUCKS = 6;
+    const MAX_TOTAL_DUCKS = 10;
+    let totalDucksSpawned = 0;
+
     function spawnDuck() {
-        if (lives <= 0) return;
+        if (lives <= 0 || ducks.length >= MAX_DUCKS || totalDucksSpawned >= MAX_TOTAL_DUCKS) return;
 
         const duck = document.createElement("div");
         duck.classList.add("duck");
 
-        // Random starting position (left or right)
         const startX = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
         const startY = Math.random() * (window.innerHeight - 150) + 50;
         duck.style.left = `${startX}px`;
@@ -39,31 +44,25 @@ document.addEventListener("DOMContentLoaded", () => {
             element: duck,
             x: startX,
             y: startY,
-            speedX: (startX < 0 ? 1 : -1) * (1 + Math.random() * 1.5 * difficulty) // Slower start, increases over time
+            speedX: (startX < 0 ? 1 : -1) * (1 + Math.random() * 1.5 * difficulty)
         });
 
-        setTimeout(() => {
-            if (gameContainer.contains(duck)) {
-                lives--;
-                livesDisplay.textContent = lives;
-                duck.remove();
-                if (lives <= 0) {
-                    alert("Game Over!");
-                }
-            }
-        }, 5000);
+        totalDucksSpawned++;
     }
 
     function gameLoop() {
-        ducks.forEach((duck, index) => {
+        ducks.forEach((duck) => {
             duck.x += duck.speedX;
-            duck.element.style.left = `${duck.x}px`;
+            duck.y += (Math.random() - 0.5) * 2;
 
-            // Remove ducks when they leave the screen
-            if (duck.x < -100 || duck.x > window.innerWidth + 100) {
-                duck.element.remove();
-                ducks.splice(index, 1);
+            if (duck.x < -50) {
+                duck.x = window.innerWidth + 50;
+            } else if (duck.x > window.innerWidth + 50) {
+                duck.x = -50;
             }
+
+            duck.element.style.left = `${duck.x}px`;
+            duck.element.style.top = `${duck.y}px`;
         });
 
         requestAnimationFrame(gameLoop);
@@ -82,13 +81,31 @@ document.addEventListener("DOMContentLoaded", () => {
             ) {
                 score++;
                 scoreDisplay.textContent = score;
+
                 duck.element.remove();
                 ducks.splice(index, 1);
             }
         });
     }
 
-    // Move crosshair with keyboard
+    function updateTimer() {
+        timerDisplay.textContent = `Time: ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            if (ducks.length > 0) {
+                lives--;
+                livesDisplay.textContent = `Lives: ${lives}`;
+                if (lives <= 0) {
+                    alert("Game Over!");
+                    return;
+                }
+            }
+            timeLeft = 60; // Reset timer
+        } else {
+            timeLeft--;
+        }
+    }
+
     document.addEventListener("keydown", (event) => {
         switch (event.key) {
             case "ArrowUp":
@@ -104,17 +121,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 crosshairX = Math.min(window.innerWidth, crosshairX + crosshairSpeed);
                 break;
             case " ":
-                shoot(); // Spacebar shoots
+                shoot();
                 break;
         }
         updateCrosshairPosition();
     });
 
     setInterval(spawnDuck, 2000);
-
-    // Increase difficulty over time
+    setInterval(updateTimer, 1000); // Countdown timer
     setInterval(() => {
-        difficulty += 0.2; // Ducks get faster every 10 seconds
+        difficulty += 0.2;
     }, 10000);
 
     gameLoop();
