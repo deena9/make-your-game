@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #000000;
+    background-size: cover; /* Ensures the image covers the whole screen */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents tiling */
+    background-attachment: fixed;
+    text-align: center;
+}
+
+h1 {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 46px;
+
+  }
+
+  .shooting-star {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: rgb(214, 223, 138);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    border-radius: 50%;
+    box-shadow: 0 0 10px white;
+    animation: fade-out 10s linear forwards;
+}
+
+.star {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: yellow;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    box-shadow: 0 0 5px white;
+    animation: blink 1s infinite alternate;
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}
