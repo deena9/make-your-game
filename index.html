@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ducky Game</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden; 
-            background-color: skyblue;
-        }
-        canvas {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-
-    <canvas id="gameCanvas" width="1000" height ="1000"></canvas>
-    <script src="duckHunt.js"></script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple HTML Page</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>duck hunt</h1>
+    <script src="script.js"></script>
+    <footer>
+        Score: <span id="counter">0</span>
+        Lives: <span id="life">3</span>
+        Timer: <span id="timer">60</span>
+    </footer>
+  </body>
 </html>
