@@ -126,6 +126,7 @@ function moveBoxes(props) {
   requestAnimationFrame(() => moveBoxes(props));
 }
 
+
 function moveWithKeys(boxes, arrow, allBoxProperties) {
   let x = window.innerWidth / 2;
   let y = window.innerHeight - 100;
@@ -147,35 +148,27 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
   function moveArrow() {
     let moved = false;
 
-    if (keys["ArrowLeft"] && keys["ArrowUp"]) {
-      x = Math.max(0, x - step);
-      y = Math.max(0, y - step);
-      moved = true;
-    } else if (keys["ArrowLeft"] && keys["ArrowDown"]) {
-      x = Math.max(0, x - step);
-      y = Math.min(window.innerHeight - 50, y + step);
-      moved = true;
-    } else if (keys["ArrowRight"] && keys["ArrowUp"]) {
-      x = Math.min(window.innerWidth - 50, x + step);
-      y = Math.max(0, y - step);
-      moved = true;
-    } else if (keys["ArrowRight"] && keys["ArrowDown"]) {
-      x = Math.min(window.innerWidth - 50, x + step);
-      y = Math.min(window.innerHeight - 50, y + step);
-      moved = true;
-    } else if (keys["ArrowLeft"]) {
+    if (keys["ArrowLeft"]) {
       x = Math.max(0, x - step);
       moved = true;
-    } else if (keys["ArrowRight"]) {
+    }
+    if (keys["ArrowRight"]) {
       x = Math.min(window.innerWidth - 50, x + step);
       moved = true;
-    } else if (keys["ArrowUp"]) {
+    }
+    if (keys["ArrowUp"]) {
       y = Math.max(0, y - step);
       moved = true;
-    } else if (keys["ArrowDown"]) {
+    }
+    if (keys["ArrowDown"]) {
       y = Math.min(window.innerHeight - 50, y + step);
       moved = true;
     }
+
+    if (keys[" "]) {
+      isOverlap(boxes, arrow, allBoxProperties, [])
+    }
+
 
     if (moved) {
       arrow.style.left = `${x}px`;
