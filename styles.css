@@ -1,0 +1,33 @@
+.boxes-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.box {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: lightblue;
+}
+
+.enemy {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 0 50px 100px 50px;
+  border-color: transparent transparent #ff4532 transparent;
+  transform: rotate(0deg);
+}
+
+.arrow {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: red;
+}
+
