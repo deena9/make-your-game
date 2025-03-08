@@ -16,11 +16,13 @@
             <li>You have <strong>3 lives</strong>. Missing too many ducks will result in a game over.</li>
             <li>The game lasts for <strong>60 seconds</strong>, try to score as high as possible!</li>
         </ul>
-        <button id="start-game">Start Game</button>
+        <br>
+        <p class="start-text">Press any key to start...</p>
+
     </div>
 
     <script>
-        document.getElementById("start-game").addEventListener("click", function() {
+        document.addEventListener("keydown", function() {
             window.location.href = "game.html"; // Redirect to the game page
         });
     </script>

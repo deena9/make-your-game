@@ -80,26 +80,6 @@ body {
     font-weight: bold;
 }
 
-/* 🔥 Buttons */
-button {
-    font-size: 22px;
-    font-weight: bold;
-    padding: 15px 30px;
-    margin-top: 20px;
-    border: 4px solid #00ffff;
-    background: black;
-    color: #00ffff;
-    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #00ffff;
-    color: black;
-    text-shadow: none;
-}
-
 /* 🔥 Game Container */
 #game-container {
     width: 100vw;
