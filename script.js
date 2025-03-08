@@ -2,13 +2,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const gameContainer = document.getElementById("game-container");
     const scoreDisplay = document.getElementById("score");
     const livesDisplay = document.getElementById("lives");
-    const timerDisplay = document.getElementById("timer"); // Add this in your HTML
+    const timerDisplay = document.getElementById("timer");
+    const fpsDisplay = document.getElementById("fps"); // Get the FPS element
 
     let score = 0;
     let lives = 3;
     let ducks = [];
     let difficulty = 1;
-    let timeLeft = 60; // 1-minute timer
+    let timeLeft = 60;
+
+    let frameCount = 0;
+    let lastFPSTime = performance.now();
+    let currentFPS = 0;
+
+    function updateFPS(timestamp) {
+        frameCount++;
+        const elapsedSinceLastFPS = timestamp - lastFPSTime;
+        if (elapsedSinceLastFPS >= 1000) {
+            currentFPS = frameCount;
+            frameCount = 0;
+            lastFPSTime = timestamp;
+            fpsDisplay.textContent = currentFPS; // Update FPS in HTML
+        }
+        requestAnimationFrame(updateFPS);
+    }
 
     // Crosshair settings
     const crosshair = document.createElement("div");
@@ -100,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
             }
-            timeLeft = 60; // Reset timer
+            timeLeft = 60;
         } else {
             timeLeft--;
         }
@@ -128,11 +145,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     setInterval(spawnDuck, 2000);
-    setInterval(updateTimer, 1000); // Countdown timer
+    setInterval(updateTimer, 1000);
     setInterval(() => {
         difficulty += 0.2;
     }, 10000);
 
     gameLoop();
     updateCrosshairPosition();
+    requestAnimationFrame(updateFPS); // Start FPS counter
 });

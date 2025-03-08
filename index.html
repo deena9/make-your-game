@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duck Hunt Game</title>
+    <title>Duck Hunt - Intro</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-container">
-        <div id="scoreboard">
-            <span>Score: <span id="score">0</span></span>
-            <span>Lives: <span id="lives">3</span></span>
-            <span>Time: <span id="timer">60</span>s</span> <!-- Add this line -->
-        </div>
+    <div id="intro-container">
+        <h1>Welcome to Duck Hunt!</h1>
+        <p><strong>Rules:</strong></p>
+        <ul>
+            <li>Use the arrow keys to move the crosshair.</li>
+            <li>Press the spacebar to shoot ducks.</li>
+            <li>You have <strong>3 lives</strong>. Missing too many ducks will result in a game over.</li>
+            <li>The game lasts for <strong>60 seconds</strong>, try to score as high as possible!</li>
+        </ul>
+        <button id="start-game">Start Game</button>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        document.getElementById("start-game").addEventListener("click", function() {
+            window.location.href = "game.html"; // Redirect to the game page
+        });
+    </script>
 </body>
 </html>
