@@ -1,61 +1,55 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const isGamePage = document.getElementById("counter") !== null
+  const isGamePage = document.getElementById("counter") !== null;
 
   if (isGamePage) {
-    const boxes = document.createElement("div")
-    boxes.classList.add("boxes-container")
-    document.body.appendChild(boxes)
+    const boxes = document.createElement("div");
+    boxes.classList.add("boxes-container");
+    document.body.appendChild(boxes);
 
-    const arrow = document.createElement("div")
-    arrow.classList.add("arrow")
-    document.body.appendChild(arrow)
+    const arrow = document.createElement("div");
+    arrow.classList.add("arrow");
+    document.body.appendChild(arrow);
 
-    const allBoxProperties = []
-    const allEnemiesProperties = []
+    const allBoxProperties = [];
+    const allEnemiesProperties = [];
 
-    moveWithKeys(boxes, arrow, allBoxProperties)
+    moveWithKeys(boxes, arrow, allBoxProperties);
 
     function checkProximity() {
-      isNearby(boxes, arrow, allBoxProperties)
-      setTimeout(checkProximity, 100)
+      isNearby(boxes, arrow, allBoxProperties);
+      setTimeout(checkProximity, 100);
     }
-    checkProximity()
+    checkProximity();
 
     function checkEnemyCollisions() {
-      isOverlap(boxes, arrow, [], allEnemiesProperties)
-      setTimeout(checkEnemyCollisions, 100)
+      isOverlap(boxes, arrow, [], allEnemiesProperties);
+      setTimeout(checkEnemyCollisions, 100);
     }
-    checkEnemyCollisions()
+    checkEnemyCollisions();
 
     function checkAndCreateEnemies() {
       if (allBoxProperties.length <= 5 && allEnemiesProperties.length === 0) {
         for (let i = 0; i < 2; i++) {
-          createEnemies(boxes, allEnemiesProperties)
+          createEnemies(boxes, allEnemiesProperties);
         }
       }
-      setTimeout(checkAndCreateEnemies, 1000)
+      setTimeout(checkAndCreateEnemies, 1000);
     }
-    setTimeout(() => checkAndCreateEnemies(), 5000)
+    setTimeout(() => checkAndCreateEnemies(), 5000);
 
-    requestAnimationFrame(() => updateTimer())
+    requestAnimationFrame(() => updateTimer());
 
     for (let i = 1; i < 10; i++) {
-      createBoxes(boxes, allBoxProperties)
-    }
-
-    if (allBoxProperties.length <= 5) {
-      for (let i = 1; i < allBoxProperties.length / 2; i++) {
-        createEnemies(boxes, allEnemiesProperties)
-      }
+      createBoxes(boxes, allBoxProperties);
     }
   } else {
-    document.addEventListener("keydown", startGame)
+    document.addEventListener("keydown", startGame);
   }
-})
+});
 
 function startGame() {
-  window.location.href = "index.html"
-  document.removeEventListener("keydown", startGame)
+  window.location.href = "index.html";
+  document.removeEventListener("keydown", startGame);
 }
 
 //FPS counter
@@ -84,51 +78,85 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function createBoxes(boxes, allBoxProperties) {
-  const box = document.createElement("div")
-  box.classList.add("box")
-  let x = Math.random() * (window.innerWidth - 100) + 50
-  let y = Math.random() * (window.innerHeight - 100) + 50
-  let dx = Math.random() * 4 - 2
-  let dy = Math.random() * 4 - 2
-  const boxProperties = { x, y, dx, dy, box, speedIncreased: false }
-  moveBoxes(boxProperties)
-  boxes.appendChild(box)
-  allBoxProperties.push(boxProperties)
+  const box = document.createElement("div");
+  box.classList.add("box");
+  let boxX = Math.random() * (window.innerWidth - 100) + 50;
+  let boxY = Math.random() * (window.innerHeight - 100) + 50;
+  let boxDx = Math.random() * 4 - 2;
+  let boxDy = Math.random() * 4 - 2;
+  const boxProperties = {
+    boxX,
+    boxY,
+    boxDx,
+    boxDy,
+    box,
+    speedIncreased: false,
+  };
+  let isEnemy = false;
+  moveBoxes(boxProperties, isEnemy);
+  boxes.appendChild(box);
+  allBoxProperties.push(boxProperties);
 }
-
-let isEnemy = false
 
 function createEnemies(boxes, allEnemiesProperties) {
-  const enemy = document.createElement("div")
-  enemy.classList.add("enemy")
-  let x = Math.random() * (window.innerWidth - 100) + 50
-  let y = Math.random() * (window.innerHeight - 100) + 50
-  let dx = Math.random() * 4 - 2
-  let dy = Math.random() * 4 - 2
-  const enemyProperties = { x, y, dx, dy, box: enemy, speedIncreased: false }
-  moveBoxes(enemyProperties)
-  boxes.appendChild(enemy)
-  allEnemiesProperties.push(enemyProperties)
+  const enemy = document.createElement("div");
+  enemy.classList.add("enemy");
+  let enemyX = Math.random() * (window.innerWidth - 100) + 50;
+  let enemyY = Math.random() * (window.innerHeight - 100) + 50;
+  let enemyDx = Math.random() * 4 - 2;
+  let enemyDy = Math.random() * 4 - 2;
+  const enemyProperties = {
+    enemyX,
+    enemyY,
+    enemyDx,
+    enemyDy,
+    box: enemy,
+    speedIncreased: false,
+  };
+  let isEnemy = true;
+  moveBoxes(enemyProperties, isEnemy);
+  boxes.appendChild(enemy);
+  allEnemiesProperties.push(enemyProperties);
 }
 
-function moveBoxes(props) {
-  props.x += props.dx;
-  props.y += props.dy;
-  if (props.x >= window.innerWidth - 50 || props.x <= 0) {
-    props.dx *= -1;
+function moveBoxes(props, isEnemy) {
+  if (!isEnemy) {
+    props.boxX += props.boxDx;
+    props.boxY += props.boxDy;
+    if (props.boxX >= window.innerWidth - 50 || props.boxX <= 0) {
+      props.boxDx *= -1;
+    }
+    if (props.boxY >= window.innerHeight - 50 || props.boxY <= 0) {
+      props.boxDy *= -1;
+    }
+    props.box.style.transform = `translate(${props.boxX}px, ${props.boxY}px)`;
+    requestAnimationFrame(() => moveBoxes(props, isEnemy, arrow));
+  } else {
+    const arrow = document.querySelector(".arrow");
+    const arrowRect = arrow.getBoundingClientRect();
+    const arrowX = arrowRect.left + arrowRect.width / 2;
+    const arrowY = arrowRect.top + arrowRect.height / 2;
+    let dirX = arrowX - props.enemyX;
+    let dirY = arrowY - props.enemyY;
+    let length = Math.sqrt(dirX * dirX + dirY * dirY);
+    if (length > 0) {
+      dirX /= length;
+      dirY /= length;
+    }
+    const speed = 2;
+    props.enemyDx = dirX * speed;
+    props.enemyDy = dirY * speed;
+    props.enemyX += props.enemyDx;
+    props.enemyY += props.enemyDy;
+    props.box.style.transform = `translate(${props.enemyX}px, ${props.enemyY}px)`;
+    requestAnimationFrame(() => moveBoxes(props, isEnemy, arrow));
   }
-  if (props.y >= window.innerHeight - 50 || props.y <= 0) {
-    props.dy *= -1;
-  }
-  props.box.style.transform = `translate(${props.x}px, ${props.y}px)`;
-  requestAnimationFrame(() => moveBoxes(props));
 }
-
 
 function moveWithKeys(boxes, arrow, allBoxProperties) {
   let x = window.innerWidth / 2;
   let y = window.innerHeight - 100;
-  const step = 10;
+  const step = 30;
   const keys = {};
 
   arrow.style.left = `${x}px`;
@@ -164,9 +192,8 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
     }
 
     if (keys[" "]) {
-      isOverlap(boxes, arrow, allBoxProperties, [])
+      isOverlap(boxes, arrow, allBoxProperties, []);
     }
-
 
     if (moved) {
       arrow.style.left = `${x}px`;
@@ -176,11 +203,11 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
 }
 
 function isNearby(boxes, arrow, allBoxProperties) {
-  const arrowRect = arrow.getBoundingClientRect()
+  const arrowRect = arrow.getBoundingClientRect();
   for (let i = 0; i < boxes.children.length; i++) {
-    const box = boxes.children[i]
-    const boxRect = boxes.children[i].getBoundingClientRect()
-    const boxProps = allBoxProperties.find((props) => props.box === box)
+    const box = boxes.children[i];
+    const boxRect = boxes.children[i].getBoundingClientRect();
+    const boxProps = allBoxProperties.find((props) => props.box === box);
     if (boxProps) {
       if (
         !(
@@ -195,43 +222,43 @@ function isNearby(boxes, arrow, allBoxProperties) {
           Math.abs(boxProps.dy) < 50 &&
           !boxProps.speedIncreased
         ) {
-          boxProps.dx *= 1.5
-          boxProps.dy *= 1.5
-          boxProps.speedIncreased = true
+          boxProps.dx *= 1.5;
+          boxProps.dy *= 1.5;
+          boxProps.speedIncreased = true;
         }
       }
     }
   }
 }
 
-let collisionCooldown = false
+let collisionCooldown = false;
 
 function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
-  const arrowRect = arrow.getBoundingClientRect()
+  const arrowRect = arrow.getBoundingClientRect();
 
   if (allBoxProperties.length > 0) {
     for (let i = 0; i < allBoxProperties.length; i++) {
-      const boxProps = allBoxProperties[i]
-      const boxRect = boxProps.box.getBoundingClientRect()
+      const boxProps = allBoxProperties[i];
+      const boxRect = boxProps.box.getBoundingClientRect();
       if (
         arrowRect.right >= boxRect.left &&
         arrowRect.left <= boxRect.right &&
         arrowRect.bottom >= boxRect.top &&
         arrowRect.top <= boxRect.bottom
       ) {
-        alert("well done")
-        allBoxProperties.splice(i, 1)
-        boxes.removeChild(boxProps.box)
-        updateScore()
-        break
+        alert("well done");
+        allBoxProperties.splice(i, 1);
+        boxes.removeChild(boxProps.box);
+        updateScore();
+        break;
       }
     }
   }
 
   if (allEnemiesProperties.length > 0) {
     for (let i = 0; i < allEnemiesProperties.length; i++) {
-      const enemyProps = allEnemiesProperties[i]
-      const enemyRect = enemyProps.box.getBoundingClientRect()
+      const enemyProps = allEnemiesProperties[i];
+      const enemyRect = enemyProps.box.getBoundingClientRect();
       if (
         arrowRect.right >= enemyRect.left &&
         arrowRect.left <= enemyRect.right &&
@@ -239,29 +266,29 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
         arrowRect.top <= enemyRect.bottom
       ) {
         if (!collisionCooldown) {
-          updateLife()
-          collisionCooldown = true
+          updateLife();
+          collisionCooldown = true;
           setTimeout(() => {
-            collisionCooldown = false
-          }, 1000)
+            collisionCooldown = false;
+          }, 1000);
         }
-        break
+        break;
       }
     }
   }
 }
 
 function updateScore() {
-  let count = parseInt(document.getElementById("counter").textContent)
-  count++
-  document.getElementById("counter").textContent = count
+  let count = parseInt(document.getElementById("counter").textContent);
+  count++;
+  document.getElementById("counter").textContent = count;
 }
 
 function checkGameOver() {
-  let life = parseInt(document.getElementById("life").textContent)
-  let timer = parseInt(document.getElementById("timer").textContent)
+  let life = parseInt(document.getElementById("life").textContent);
+  let timer = parseInt(document.getElementById("timer").textContent);
   if (life <= 0 || timer <= 0) {
-    alert("GAME OVER")
+    alert("GAME OVER");
     setTimeout(() => {
       window.location.href = "index.html"
     }, 1000)
@@ -269,19 +296,19 @@ function checkGameOver() {
 }
 
 function updateLife() {
-  let life = parseInt(document.getElementById("life").textContent)
-  life--
-  document.getElementById("life").textContent = life
-  checkGameOver()
+  let life = parseInt(document.getElementById("life").textContent);
+  life--;
+  document.getElementById("life").textContent = life;
+  checkGameOver();
 }
 
 function updateTimer() {
-  let timer = parseInt(document.getElementById("timer").textContent)
+  let timer = parseInt(document.getElementById("timer").textContent);
   if (timer <= 0) {
-    checkGameOver()
-    return
+    checkGameOver();
+    return;
   }
-  timer--
-  document.getElementById("timer").textContent = timer
-  setTimeout(updateTimer, 1000)
+  timer--;
+  document.getElementById("timer").textContent = timer;
+  setTimeout(updateTimer, 1000);
 }
