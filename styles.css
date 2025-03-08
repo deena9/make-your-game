@@ -1,11 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-.boxes-container {
+.game-container {
+    width: 70vw;
+    height: 60vh;
+    position: relative;
+    border: 5px solid #ff00ff;
+    overflow: hidden; /* Prevent elements from going outside */
+    margin: auto; /* Center the game box */
+    background-color: rgb(246, 199, 236); /* Optional: set a background */
+  }
+
+  .boxes-container {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
   }
   
   .box {
@@ -78,13 +88,6 @@ body {
     font-size: 20px;
     line-height: 1.5;
     font-weight: bold;
-}
-
-/* 🔥 Game Container */
-#game-container {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
 }
 
 /* 🔥 Ducks */
@@ -173,4 +176,20 @@ body {
     background: #00ffff;
     color: black;
     text-shadow: none;
+}
+
+header, footer {
+    text-align: center;
+    padding: 15px;
+    background: #222;
+    color: white;
+    font-size: 20px;
+    position: relative;
+}
+
+footer {
+    font-size: 14px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
