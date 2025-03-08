@@ -1,3 +1,7 @@
+let paused = false; // Track the paused state
+let pauseMenu; // Store the pause menu element
+let timerInterval; // Store the timer interval ID
+
 document.addEventListener("DOMContentLoaded", function () {
   const isGamePage = document.getElementById("counter") !== null;
 
@@ -16,19 +20,23 @@ document.addEventListener("DOMContentLoaded", function () {
     moveWithKeys(boxes, arrow, allBoxProperties);
 
     function checkProximity() {
-      isNearby(boxes, arrow, allBoxProperties);
+      if (!paused) {
+        isNearby(boxes, arrow, allBoxProperties);
+      }
       setTimeout(checkProximity, 100);
     }
     checkProximity();
 
     function checkEnemyCollisions() {
-      isOverlap(boxes, arrow, [], allEnemiesProperties);
+      if (!paused) {
+        isOverlap(boxes, arrow, [], allEnemiesProperties);
+      }
       setTimeout(checkEnemyCollisions, 100);
     }
     checkEnemyCollisions();
 
     function checkAndCreateEnemies() {
-      if (allBoxProperties.length <= 5 && allEnemiesProperties.length === 0) {
+      if (!paused && allBoxProperties.length <= 5 && allEnemiesProperties.length === 0) {
         for (let i = 0; i < 2; i++) {
           createEnemies(boxes, allEnemiesProperties);
         }
@@ -37,22 +45,79 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     setTimeout(() => checkAndCreateEnemies(), 5000);
 
-    requestAnimationFrame(() => updateTimer());
+    // Start the timer when the game starts
+    timerInterval = setTimeout(updateTimer, 1000);
 
     for (let i = 1; i < 10; i++) {
       createBoxes(boxes, allBoxProperties);
     }
+
+    // Add the pause menu
+    createPauseMenu();
   } else {
     document.addEventListener("keydown", startGame);
   }
+
+  // Consolidated keydown event listener for pause/resume and restart functionality
+  document.addEventListener("keydown", (e) => {
+    if (e.key === 'Escape') {
+      togglePause(); // Use Escape to toggle pause/resume
+    } else if (e.key === 'Enter') {
+      if (paused) {
+        restartGame(); // Use Enter to restart when the game is paused
+      } else {
+        togglePause(); // If not paused, Enter can toggle pause
+      }
+    }
+  });
 });
+
+function createPauseMenu() {
+  pauseMenu = document.createElement("div");
+  pauseMenu.classList.add("pause-menu");
+  pauseMenu.innerHTML = `
+    <div class="pause-content">
+      <h2>Game Paused</h2>
+      <button id="resumeBtn">Press ESC to resume</button>
+      <button id="restartBtn">Press Enter to restart</button>
+    </div>
+  `;
+  document.body.appendChild(pauseMenu);
+
+  // Hide the menu initially
+  pauseMenu.style.display = "none";
+}
+
+function togglePause() {
+  if (paused) {
+    resumeGame();
+  } else {
+    pauseGame();
+  }
+}
+
+function pauseGame() {
+  paused = true;
+  clearTimeout(timerInterval); // Stop the timer when paused
+  pauseMenu.style.display = "block"; // Show the pause menu
+}
+
+function resumeGame() {
+  paused = false;
+  pauseMenu.style.display = "none"; // Hide the pause menu
+  timerInterval = setTimeout(updateTimer, 1000); // Restart the timer
+}
+
+function restartGame() {
+  window.location.reload(); // Reload the page to restart the game
+}
 
 function startGame() {
   window.location.href = "index.html";
   document.removeEventListener("keydown", startGame);
 }
 
-//FPS counter
+// FPS counter
 document.addEventListener("DOMContentLoaded", function () {
   const fpsDisplay = document.getElementById("fps"); // Get the FPS element
 
@@ -61,21 +126,36 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentFPS = 0;
 
   function renderFps(timestamp) {
-    frameCount++;
-
-    const elapsedSinceLastFPS = timestamp - lastFPSTime;
-    if (elapsedSinceLastFPS >= 1000) {
-      currentFPS = frameCount;
-      frameCount = 0;
-      lastFPSTime = timestamp;
+        frameCount++;
+    
+        const elapsedSinceLastFPS = timestamp - lastFPSTime;
+        if (elapsedSinceLastFPS >= 1000) {
+          currentFPS = frameCount;
+          frameCount = 0;
+          lastFPSTime = timestamp;
+        }
+    
+        fpsDisplay.textContent = `${currentFPS}`;
+    
+      requestAnimationFrame(renderFps); // Continue the loop regardless of the pause
     }
-
-    fpsDisplay.textContent = `${currentFPS}`;
-
     requestAnimationFrame(renderFps);
-  }
-  requestAnimationFrame(renderFps);
 });
+
+function updateTimer() {
+  if (paused) return; // Don't update the timer if paused
+
+  let timer = parseInt(document.getElementById("timer").textContent);
+  if (timer <= 0) {
+    checkGameOver();
+    return;
+  }
+  timer--;
+  document.getElementById("timer").textContent = timer;
+
+  // Continue updating the timer after 1 second
+  timerInterval = setTimeout(updateTimer, 1000);
+}
 
 function createBoxes(boxes, allBoxProperties) {
   const box = document.createElement("div");
@@ -300,15 +380,4 @@ function updateLife() {
   life--;
   document.getElementById("life").textContent = life;
   checkGameOver();
-}
-
-function updateTimer() {
-  let timer = parseInt(document.getElementById("timer").textContent);
-  if (timer <= 0) {
-    checkGameOver();
-    return;
-  }
-  timer--;
-  document.getElementById("timer").textContent = timer;
-  setTimeout(updateTimer, 1000);
 }
