@@ -119,7 +119,7 @@ function createEnemies(boxes, allEnemiesProperties) {
   allEnemiesProperties.push(enemyProperties);
 }
 
-function moveBoxes(props, isEnemy) {
+function moveBoxes(props, isEnemy, arrow) {
   if (!isEnemy) {
     props.boxX += props.boxDx;
     props.boxY += props.boxDy;
