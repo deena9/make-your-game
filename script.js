@@ -60,9 +60,7 @@ function startGame() {
 
 //FPS counter
 document.addEventListener("DOMContentLoaded", function () {
-  const fpsDisplay = document.createElement("div");
-  fpsDisplay.id = "fps-display";
-  document.body.appendChild(fpsDisplay);
+  const fpsDisplay = document.getElementById("fps"); // Get the FPS element
 
   let frameCount = 0;
   let lastFPSTime = performance.now();
@@ -78,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
       lastFPSTime = timestamp;
     }
 
-    fpsDisplay.textContent = `FPS: ${currentFPS}`;
+    fpsDisplay.textContent = `${currentFPS}`;
 
     requestAnimationFrame(renderFps);
   }
@@ -265,7 +263,7 @@ function checkGameOver() {
   if (life <= 0 || timer <= 0) {
     alert("GAME OVER")
     setTimeout(() => {
-      window.location.href = "home.html"
+      window.location.href = "index.html"
     }, 1000)
   }
 }

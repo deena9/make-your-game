@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Duck Hunt - Game</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <h1>Duck Hunt</h1>
-    <footer>
-      Score: <span id="counter">0</span>
-      Lives: <span id="life">3</span>
-      Timer: <span id="timer">60</span>
-    </footer>
-    <script src="script.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duck Hunt - Intro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="intro-container">
+        <h1>Welcome to Duck Hunt!</h1>
+        <p><strong>Rules:</strong></p>
+        <ul>
+            <li>Use the arrow keys to move the crosshair.</li>
+            <li>Press the spacebar to shoot ducks.</li>
+            <li>You have <strong>3 lives</strong>. Missing too many ducks will result in a game over.</li>
+            <li>The game lasts for <strong>60 seconds</strong>, try to score as high as possible!</li>
+        </ul>
+        <button id="start-game">Start Game</button>
+    </div>
+
+    <script>
+        document.getElementById("start-game").addEventListener("click", function() {
+            window.location.href = "game.html"; // Redirect to the game page
+        });
+    </script>
+</body>
 </html>
