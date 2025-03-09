@@ -43,20 +43,7 @@
     border-radius: 50%;
     background-color: red;
   }
-
-  #fps-display {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background: white;
-    color: black;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    z-index: 1000;
-  }  
-
+  
   * {
     margin: 0;
     padding: 0;
