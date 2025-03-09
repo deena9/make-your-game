@@ -385,6 +385,17 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
   }
 }
 
+function showHitMessage() {
+  const hitMessage = document.createElement("div");
+  hitMessage.classList.add("hit-message");
+  hitMessage.textContent = "You've been hit!";
+  document.body.appendChild(hitMessage);
+
+  setTimeout(() => {
+    hitMessage.remove();
+  }, 800);
+}
+
 function updateScore() {
   let count = parseInt(document.getElementById("counter").textContent);
   count++;
@@ -449,6 +460,7 @@ function updateLife() {
   if (life > 0) {
     life--;
     document.getElementById("life").textContent = life;
+    showHitMessage();
   }
   checkGameOver();
 }
