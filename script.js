@@ -391,10 +391,14 @@ function updateScore() {
   document.getElementById("counter").textContent = count;
 }
 
+let gameOver = false;
+
 function checkGameOver() {
+  if (gameOver) return;
   let life = parseInt(document.getElementById("life").textContent);
   let timer = parseInt(document.getElementById("timer").textContent);
   if (life <= 0 || timer <= 0) {
+    gameOver = true;
     pauseMenu = document.createElement("div");
     pauseMenu.classList.add("pause-menu");
     pauseMenu.innerHTML = `
@@ -412,12 +416,14 @@ function checkGameOver() {
       } 
     }
   );
-
 }
 
 function updateLife() {
   let life = parseInt(document.getElementById("life").textContent);
-  life--;
-  document.getElementById("life").textContent = life;
+  if (life > 0) {
+    life--;
+    document.getElementById("life").textContent = life;
+  }
   checkGameOver();
 }
+
