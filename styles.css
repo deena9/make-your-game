@@ -7,7 +7,7 @@
     border: 5px solid #ff00ff;
     overflow: hidden; /* Prevent elements from going outside */
     margin: auto; /* Center the game box */
-    background-color: rgb(246, 199, 236); /* Optional: set a background */
+    background-color: rgb(110, 15, 89); /* Optional: set a background */
   }
 
   .boxes-container {
