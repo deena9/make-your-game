@@ -382,10 +382,24 @@ function checkGameOver() {
   let timer = parseInt(document.getElementById("timer").textContent);
   if (life <= 0 || timer <= 0) {
     alert("GAME OVER");
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1000);
+    pauseMenu = document.createElement("div");
+    pauseMenu.classList.add("pause-menu");
+    pauseMenu.innerHTML = `
+          <div class="pause-content">
+            <h2>GAME OVER</h2>
+            <button id="restartBtn">Press Enter to restart</button>
+          </div>
+        `;
+        document.body.appendChild(pauseMenu);
   }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === 'Enter') {
+        restartGame(); // Use Enter to restart when the game is paused
+      } 
+    }
+  );
+
 }
 
 function updateLife() {
