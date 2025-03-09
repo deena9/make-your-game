@@ -36,7 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
     checkEnemyCollisions();
 
     function checkAndCreateEnemies() {
-      if (!paused && allBoxProperties.length <= 5 && allEnemiesProperties.length === 0) {
+      if (
+        !paused &&
+        allBoxProperties.length <= 5 &&
+        allEnemiesProperties.length === 0
+      ) {
         for (let i = 0; i < 2; i++) {
           createEnemies(boxes, allEnemiesProperties);
         }
@@ -60,13 +64,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Consolidated keydown event listener for pause/resume and restart functionality
   document.addEventListener("keydown", (e) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       togglePause(); // Use Escape to toggle pause/resume
-    } else if (e.key === 'Enter') {
+    } else if (e.key === "Enter") {
       if (paused) {
         restartGame(); // Use Enter to restart when the game is paused
-      } else {
-        togglePause(); // If not paused, Enter can toggle pause
       }
     }
   });
@@ -126,20 +128,20 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentFPS = 0;
 
   function renderFps(timestamp) {
-        frameCount++;
-    
-        const elapsedSinceLastFPS = timestamp - lastFPSTime;
-        if (elapsedSinceLastFPS >= 1000) {
-          currentFPS = frameCount;
-          frameCount = 0;
-          lastFPSTime = timestamp;
-        }
-    
-        fpsDisplay.textContent = `${currentFPS}`;
-    
-      requestAnimationFrame(renderFps); // Continue the loop regardless of the pause
+    frameCount++;
+
+    const elapsedSinceLastFPS = timestamp - lastFPSTime;
+    if (elapsedSinceLastFPS >= 1000) {
+      currentFPS = frameCount;
+      frameCount = 0;
+      lastFPSTime = timestamp;
     }
-    requestAnimationFrame(renderFps);
+
+    fpsDisplay.textContent = `${currentFPS}`;
+
+    requestAnimationFrame(renderFps); // Continue the loop regardless of the pause
+  }
+  requestAnimationFrame(renderFps);
 });
 
 function updateTimer() {
@@ -200,13 +202,18 @@ function createEnemies(boxes, allEnemiesProperties) {
 }
 
 function moveBoxes(props, isEnemy, arrow) {
+  if (paused) {
+    requestAnimationFrame(() => moveBoxes(props, isEnemy, arrow));
+    return;
+  }
   if (!isEnemy) {
     props.boxX += props.boxDx;
     props.boxY += props.boxDy;
     if (props.boxX >= window.innerWidth - 50 || props.boxX <= 0) {
       props.boxDx *= -1;
     }
-    if (props.boxY >= window.innerHeight - 50 || props.boxY <= 0) {
+    if (props.boxY >= window.innerHeight - 100 || props.boxY <= 100) {
+      console.log("ok");
       props.boxDy *= -1;
     }
     props.box.style.transform = `translate(${props.boxX}px, ${props.boxY}px)`;
@@ -252,6 +259,7 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
   });
 
   function moveArrow() {
+    if (paused) return;
     let moved = false;
 
     if (keys["ArrowLeft"]) {
@@ -370,8 +378,8 @@ function checkGameOver() {
   if (life <= 0 || timer <= 0) {
     alert("GAME OVER");
     setTimeout(() => {
-      window.location.href = "index.html"
-    }, 1000)
+      window.location.href = "index.html";
+    }, 1000);
   }
 }
 
