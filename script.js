@@ -243,7 +243,7 @@ function moveBoxes(props, isEnemy, arrow) {
 function moveWithKeys(boxes, arrow, allBoxProperties) {
   let x = window.innerWidth / 2;
   let y = window.innerHeight - 100;
-  const step = 30;
+  const step = 5; // Adjust the step size for smoother movement
   const keys = {};
 
   arrow.style.left = `${x}px`;
@@ -251,7 +251,6 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
 
   document.addEventListener("keydown", (e) => {
     keys[e.key] = true;
-    moveArrow();
   });
 
   document.addEventListener("keyup", (e) => {
@@ -259,7 +258,11 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
   });
 
   function moveArrow() {
-    if (paused) return;
+    if (paused) {
+      requestAnimationFrame(moveArrow);
+      return;
+    }
+
     let moved = false;
 
     if (keys["ArrowLeft"]) {
@@ -287,7 +290,9 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
       arrow.style.left = `${x}px`;
       arrow.style.top = `${y}px`;
     }
+    requestAnimationFrame(moveArrow);
   }
+  requestAnimationFrame(moveArrow);
 }
 
 function isNearby(boxes, arrow, allBoxProperties) {
