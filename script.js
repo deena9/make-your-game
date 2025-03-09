@@ -354,7 +354,6 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
         arrowRect.bottom >= boxRect.top &&
         arrowRect.top <= boxRect.bottom
       ) {
-        alert("well done");
         allBoxProperties.splice(i, 1);
         boxes.removeChild(boxProps.box);
         updateScore();
@@ -396,7 +395,6 @@ function checkGameOver() {
   let life = parseInt(document.getElementById("life").textContent);
   let timer = parseInt(document.getElementById("timer").textContent);
   if (life <= 0 || timer <= 0) {
-    alert("GAME OVER");
     pauseMenu = document.createElement("div");
     pauseMenu.classList.add("pause-menu");
     pauseMenu.innerHTML = `

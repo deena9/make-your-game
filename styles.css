@@ -181,10 +181,12 @@ body {
 
 /* Restrict the game area */
 #game-container {
-    position: relative;
+    position: absolute;
     width: 100%;
-    height: calc(100vh - 165px); /* Adjust based on header/footer height */
+    height: 900px; /* Adjust based on header/footer height */
+    width:1200px;
     overflow: hidden; /* Prevent elements from spilling out */
+    background-color:white;
 }
 
 footer {
