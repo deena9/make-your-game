@@ -162,20 +162,19 @@ function updateTimer() {
 function createBoxes(boxes, allBoxProperties) {
   const box = document.createElement("div");
   box.classList.add("box");
-  let boxX = Math.random() * (window.innerWidth - 100) + 50;
-  let boxY = Math.random() * (window.innerHeight - 100) + 50;
+
+  const gameContainer = document.getElementById("game-container");
+  const containerRect = gameContainer.getBoundingClientRect();
+
+  let boxX = Math.random() * (containerRect.width - 100) + containerRect.left;
+  let boxY = Math.random() * (containerRect.height - 100) + containerRect.top;
+  
   let boxDx = Math.random() * 4 - 2;
   let boxDy = Math.random() * 4 - 2;
-  const boxProperties = {
-    boxX,
-    boxY,
-    boxDx,
-    boxDy,
-    box,
-    speedIncreased: false,
-  };
-  let isEnemy = false;
-  moveBoxes(boxProperties, isEnemy);
+
+  const boxProperties = { boxX, boxY, boxDx, boxDy, box, speedIncreased: false };
+
+  moveBoxes(boxProperties, false);
   boxes.appendChild(box);
   allBoxProperties.push(boxProperties);
 }
@@ -183,66 +182,82 @@ function createBoxes(boxes, allBoxProperties) {
 function createEnemies(boxes, allEnemiesProperties) {
   const enemy = document.createElement("div");
   enemy.classList.add("enemy");
-  let enemyX = Math.random() * (window.innerWidth - 100) + 50;
-  let enemyY = Math.random() * (window.innerHeight - 100) + 50;
+
+  const gameContainer = document.getElementById("game-container");
+  const containerRect = gameContainer.getBoundingClientRect();
+
+  let enemyX = Math.random() * (containerRect.width - 100) + containerRect.left;
+  let enemyY = Math.random() * (containerRect.height - 100) + containerRect.top;
+  
   let enemyDx = Math.random() * 4 - 2;
   let enemyDy = Math.random() * 4 - 2;
-  const enemyProperties = {
-    enemyX,
-    enemyY,
-    enemyDx,
-    enemyDy,
-    box: enemy,
-    speedIncreased: false,
-  };
-  let isEnemy = true;
-  moveBoxes(enemyProperties, isEnemy);
+
+  const enemyProperties = { enemyX, enemyY, enemyDx, enemyDy, box: enemy, speedIncreased: false };
+
+  moveBoxes(enemyProperties, true);
   boxes.appendChild(enemy);
   allEnemiesProperties.push(enemyProperties);
 }
 
-function moveBoxes(props, isEnemy, arrow) {
+function moveBoxes(props, isEnemy) {
   if (paused) {
-    requestAnimationFrame(() => moveBoxes(props, isEnemy, arrow));
+    requestAnimationFrame(() => moveBoxes(props, isEnemy));
     return;
   }
+
+  const gameContainer = document.getElementById("game-container");
+  const containerRect = gameContainer.getBoundingClientRect();
+
   if (!isEnemy) {
     props.boxX += props.boxDx;
     props.boxY += props.boxDy;
-    if (props.boxX >= window.innerWidth - 50 || props.boxX <= 0) {
+
+    if (props.boxX >= containerRect.right - 50 || props.boxX <= containerRect.left) {
       props.boxDx *= -1;
     }
-    if (props.boxY >= window.innerHeight - 100 || props.boxY <= 100) {
-      console.log("ok");
+    if (props.boxY >= containerRect.bottom - 50 || props.boxY <= containerRect.top) {
       props.boxDy *= -1;
     }
+
     props.box.style.transform = `translate(${props.boxX}px, ${props.boxY}px)`;
-    requestAnimationFrame(() => moveBoxes(props, isEnemy, arrow));
+    requestAnimationFrame(() => moveBoxes(props, isEnemy));
   } else {
     const arrow = document.querySelector(".arrow");
     const arrowRect = arrow.getBoundingClientRect();
     const arrowX = arrowRect.left + arrowRect.width / 2;
     const arrowY = arrowRect.top + arrowRect.height / 2;
+
     let dirX = arrowX - props.enemyX;
     let dirY = arrowY - props.enemyY;
     let length = Math.sqrt(dirX * dirX + dirY * dirY);
+
     if (length > 0) {
       dirX /= length;
       dirY /= length;
     }
+
     const speed = 2;
     props.enemyDx = dirX * speed;
     props.enemyDy = dirY * speed;
+
     props.enemyX += props.enemyDx;
     props.enemyY += props.enemyDy;
+
+    props.enemyX = Math.min(Math.max(props.enemyX, containerRect.left), containerRect.right - 50);
+    props.enemyY = Math.min(Math.max(props.enemyY, containerRect.top), containerRect.bottom - 50);
+
     props.box.style.transform = `translate(${props.enemyX}px, ${props.enemyY}px)`;
-    requestAnimationFrame(() => moveBoxes(props, isEnemy, arrow));
+
+    requestAnimationFrame(() => moveBoxes(props, isEnemy));
   }
 }
 
 function moveWithKeys(boxes, arrow, allBoxProperties) {
-  let x = window.innerWidth / 2;
-  let y = window.innerHeight - 100;
+  const gameContainer = document.getElementById("game-container");
+  const containerRect = gameContainer.getBoundingClientRect();
+  
+  let x = containerRect.left + containerRect.width / 2;
+  let y = containerRect.top + containerRect.height / 2;
   const step = 5; // Adjust the step size for smoother movement
   const keys = {};
 
@@ -266,19 +281,19 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
     let moved = false;
 
     if (keys["ArrowLeft"]) {
-      x = Math.max(0, x - step);
+      x = Math.max(containerRect.left, x - step);
       moved = true;
     }
     if (keys["ArrowRight"]) {
-      x = Math.min(window.innerWidth - 50, x + step);
+      x = Math.min(containerRect.right - arrow.clientWidth, x + step);
       moved = true;
     }
     if (keys["ArrowUp"]) {
-      y = Math.max(0, y - step);
+      y = Math.max(containerRect.top, y - step);
       moved = true;
     }
     if (keys["ArrowDown"]) {
-      y = Math.min(window.innerHeight - 50, y + step);
+      y = Math.min(containerRect.bottom - arrow.clientHeight, y + step);
       moved = true;
     }
 
