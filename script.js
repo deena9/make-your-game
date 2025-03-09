@@ -389,6 +389,32 @@ function updateScore() {
   let count = parseInt(document.getElementById("counter").textContent);
   count++;
   document.getElementById("counter").textContent = count;
+
+  // Check for win condition
+  if (count >=9) {
+    showWinMessage();
+  }
+}
+
+function showWinMessage() {
+  const winMessage = document.createElement("div");
+  winMessage.classList.add("win-message");
+  winMessage.innerHTML = `
+    <div class="pause-content">
+      <h2>You Won!</h2>
+      <button id="restartBtn">Press Enter to restart</button>
+    </div>
+  `;
+  document.body.appendChild(winMessage);
+
+  // Add event listener to restart the game when Enter is pressed
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      restartGame();
+    }
+  });
+
+  paused = true; // Pause the game when the player wins
 }
 
 let gameOver = false;
