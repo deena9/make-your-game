@@ -1,21 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-.game-container {
-    width: 70vw;
-    height: 60vh;
-    position: relative;
-    border: 5px solid #ff00ff;
-    overflow: hidden; /* Prevent elements from going outside */
-    margin: auto; /* Center the game box */
-    background-color: rgb(110, 15, 89); /* Optional: set a background */
-  }
-
   .boxes-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: relative; 
+    height: 1000px; /* Adjust based on header/footer height */
+    width:1500px;
+    overflow: hidden; /* Prevent elements from spilling out */
+    background-color:white;
+    border: 5px solid #ff00ff;
+    margin: auto; /* Center the game box */
   }
   
   .box {
@@ -181,23 +173,13 @@ body {
     text-shadow: none;
 }
 
-/* Restrict the game area */
-#game-container {
-    position: absolute;
-    width: 100%;
-    height: 900px; /* Adjust based on header/footer height */
-    width:1200px;
-    overflow: hidden; /* Prevent elements from spilling out */
-    background-color:white;
-}
-
 footer {
     font-size: 14px;
     position: absolute;
     bottom: 0;
     width: 100%;
     text-align: center;
-    padding: 15px;
+    padding: 20px;
     background: #222;
     color: white;
     font-size: 20px;

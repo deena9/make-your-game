@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isGamePage) {
     const boxes = document.createElement("div");
     boxes.classList.add("boxes-container");
-    document.body.appendChild(boxes);
+    boxes.setAttribute("id", "boxes-container"); // Ensure ID is set
+    document.body.appendChild(boxes); // Append to DOM before calling createBoxes()
 
     const arrow = document.createElement("div");
     arrow.classList.add("arrow");
@@ -160,14 +161,13 @@ function updateTimer() {
 }
 
 function createBoxes(boxes, allBoxProperties) {
+  const containerRect = boxes.getBoundingClientRect(); // Directly use 'boxes'
+
   const box = document.createElement("div");
   box.classList.add("box");
 
-  const gameContainer = document.getElementById("game-container");
-  const containerRect = gameContainer.getBoundingClientRect();
-
-  let boxX = Math.random() * (containerRect.width - 100) + containerRect.left;
-  let boxY = Math.random() * (containerRect.height - 100) + containerRect.top;
+  let boxX = Math.random() * (containerRect.width - 50); // Relative to container
+  let boxY = Math.random() * (containerRect.height - 50); // Relative to container
   
   let boxDx = Math.random() * 4 - 2;
   let boxDy = Math.random() * 4 - 2;
@@ -180,14 +180,12 @@ function createBoxes(boxes, allBoxProperties) {
 }
 
 function createEnemies(boxes, allEnemiesProperties) {
+  const containerRect = boxes.getBoundingClientRect(); // Directly use 'boxes'
   const enemy = document.createElement("div");
   enemy.classList.add("enemy");
 
-  const gameContainer = document.getElementById("game-container");
-  const containerRect = gameContainer.getBoundingClientRect();
-
-  let enemyX = Math.random() * (containerRect.width - 100) + containerRect.left;
-  let enemyY = Math.random() * (containerRect.height - 100) + containerRect.top;
+  let enemyX = Math.random() * (containerRect.width - 100);
+  let enemyY = Math.random() * (containerRect.height - 100);
   
   let enemyDx = Math.random() * 4 - 2;
   let enemyDy = Math.random() * 4 - 2;
@@ -205,27 +203,40 @@ function moveBoxes(props, isEnemy) {
     return;
   }
 
-  const gameContainer = document.getElementById("game-container");
-  const containerRect = gameContainer.getBoundingClientRect();
+  const boxesContainer = document.getElementById("boxes-container");
+  const containerRect = boxesContainer.getBoundingClientRect();
 
   if (!isEnemy) {
     props.boxX += props.boxDx;
     props.boxY += props.boxDy;
 
-    if (props.boxX >= containerRect.right - 50 || props.boxX <= containerRect.left) {
+    // Ensure box stays within the container boundaries
+    if (props.boxX >= containerRect.width - 50) {
+      props.boxX = containerRect.width - 50;
       props.boxDx *= -1;
     }
-    if (props.boxY >= containerRect.bottom - 50 || props.boxY <= containerRect.top) {
+    if (props.boxX <= 0) {
+      props.boxX = 0;
+      props.boxDx *= -1;
+    }
+    if (props.boxY >= containerRect.height - 50) {
+      props.boxY = containerRect.height - 50;
+      props.boxDy *= -1;
+    }
+    if (props.boxY <= 0) {
+      props.boxY = 0;
       props.boxDy *= -1;
     }
 
-    props.box.style.transform = `translate(${props.boxX}px, ${props.boxY}px)`;
+    props.box.style.left = `${props.boxX}px`;
+    props.box.style.top = `${props.boxY}px`;
+
     requestAnimationFrame(() => moveBoxes(props, isEnemy));
   } else {
     const arrow = document.querySelector(".arrow");
     const arrowRect = arrow.getBoundingClientRect();
-    const arrowX = arrowRect.left + arrowRect.width / 2;
-    const arrowY = arrowRect.top + arrowRect.height / 2;
+    const arrowX = arrowRect.left - containerRect.left + arrowRect.width / 2;
+    const arrowY = arrowRect.top - containerRect.top + arrowRect.height / 2;
 
     let dirX = arrowX - props.enemyX;
     let dirY = arrowY - props.enemyY;
@@ -243,18 +254,19 @@ function moveBoxes(props, isEnemy) {
     props.enemyX += props.enemyDx;
     props.enemyY += props.enemyDy;
 
-    props.enemyX = Math.min(Math.max(props.enemyX, containerRect.left), containerRect.right - 50);
-    props.enemyY = Math.min(Math.max(props.enemyY, containerRect.top), containerRect.bottom - 50);
+    // Ensure enemy stays inside the box
+    props.enemyX = Math.min(Math.max(props.enemyX, 0), containerRect.width - 100);
+    props.enemyY = Math.min(Math.max(props.enemyY, 0), containerRect.height - 100);
 
-    props.box.style.transform = `translate(${props.enemyX}px, ${props.enemyY}px)`;
+    props.box.style.left = `${props.enemyX}px`;
+    props.box.style.top = `${props.enemyY}px`;
 
     requestAnimationFrame(() => moveBoxes(props, isEnemy));
   }
 }
 
 function moveWithKeys(boxes, arrow, allBoxProperties) {
-  const gameContainer = document.getElementById("game-container");
-  const containerRect = gameContainer.getBoundingClientRect();
+  const containerRect = boxes.getBoundingClientRect(); // Directly use 'boxes'
   
   let x = containerRect.left + containerRect.width / 2;
   let y = containerRect.top + containerRect.height / 2;
