@@ -10,21 +10,6 @@
   background-size: cover;
 }
 
-.boxes-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /*background-image: url("./assets/grassFieldWithFence.png");*/
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: 2; /* Ensure it's above the boxes */
-  pointer-events: none; /* So it doesn't interfere with interactions */
-}
-
 .box {
   position: absolute;
   width: 70px;
@@ -91,16 +76,6 @@ body {
   font-weight: bold;
 }
 
-/* 🔥 Ducks */
-.duck {
-  width: 60px;
-  height: 60px;
-  position: absolute;
-  background-image: url("funny-duck.png");
-  background-size: cover;
-  filter: drop-shadow(0 0 15px #ff00ff);
-}
-
 /* 🔥 Scoreboard */
 #scoreboard {
   position: absolute;
@@ -128,18 +103,6 @@ body {
   color: white;
   border: 4px solid #ff00ff;
   box-shadow: 0 0 15px #ff00ff;
-}
-
-/* 🔥 Crosshair */
-#crosshair {
-  width: 80px;
-  height: 80px;
-  position: absolute;
-  background-image: url("crosshair.png");
-  background-size: cover;
-  filter: drop-shadow(0 0 15px #00ffff);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
 }
 
 .pause-menu {
