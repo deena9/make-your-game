@@ -458,7 +458,7 @@ function updateScore() {
 
 function showWinMessage() {
   const winMessage = document.createElement("div");
-  winMessage.classList.add("win-message");
+  winMessage.classList.add("pause-menu");
   winMessage.innerHTML = `
     <div class="pause-content">
       <h2>You Won!</h2>
