@@ -2,6 +2,11 @@ let paused = false; // Track the paused state
 let pauseMenu; // Store the pause menu element
 let timerInterval; // Store the timer interval ID
 
+const topOffset = 30;
+const botOffset = 50;
+const leftOffset = 115;
+const rightOffset = 100;
+
 document.addEventListener("DOMContentLoaded", function () {
   const isGamePage = document.getElementById("counter") !== null;
 
@@ -178,8 +183,8 @@ function createBoxes(boxes, allBoxProperties) {
 
   box.style.backgroundImage = `url('./assets/${randomAnimals()}.png')`;
 
-  let boxX = Math.random() * (containerRect.width - 70); // Relative to container
-  let boxY = Math.random() * (containerRect.height - 70); // Relative to container
+  let boxX = Math.random() * (containerRect.width - (70 + leftOffset + rightOffset)) + leftOffset; // Relative to container
+  let boxY = Math.random() * (containerRect.height - (70 + topOffset + botOffset)) + topOffset; // Relative to container
 
   let boxDx = Math.random() * 4 - 2;
   let boxDy = Math.random() * 4 - 2;
@@ -239,19 +244,19 @@ function moveBoxes(props, isEnemy) {
     props.boxY += props.boxDy;
 
     // Ensure box stays within the container boundaries
-    if (props.boxX >= containerRect.width - 70) {
+    if (props.boxX >= containerRect.width - (70 + rightOffset) ) {
       //props.boxX = containerRect.width - 70;
       props.boxDx *= -1;
     }
-    if (props.boxX <= 0) {
+    if (props.boxX <= (0 + leftOffset)) {
       //props.boxX = 0;
       props.boxDx *= -1;
     }
-    if (props.boxY >= containerRect.height - 70) {
+    if (props.boxY >= containerRect.height - (70 + botOffset)) {
       //props.boxY = containerRect.height - 70;
       props.boxDy *= -1;
     }
-    if (props.boxY <= 0) {
+    if (props.boxY <= (0 + topOffset)) {
       //props.boxY = 0;
       props.boxDy *= -1;
     }

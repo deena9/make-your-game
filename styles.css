@@ -5,19 +5,35 @@
   height: 768px; /* Adjust based on header/footer height */
   width: 1366px;
   overflow: hidden; /* Prevent elements from spilling out */
-  background-image: url("./assets/grassField.png");
-  border: 5px solid #ff00ff;
   margin: auto; /* Center the game box */
+  background-image: url("./assets/fenced_farm.png");
+  background-size: cover;
+}
+
+.boxes-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /*background-image: url("./assets/grassFieldWithFence.png");*/
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2; /* Ensure it's above the boxes */
+  pointer-events: none; /* So it doesn't interfere with interactions */
 }
 
 .box {
   position: absolute;
   width: 70px;
   height: 70px;
-  /*background-image: url(./assets/cows.png);*/
   background-size: contain;
-  background-image: center;
   background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("./assets/cows.png"); /* Keep box background */
+  z-index: 2; /* Ensure boxes are below the background image */
 }
 
 .enemy {
@@ -27,6 +43,7 @@
   background-size: contain;
   background-image: center;
   background-repeat: no-repeat;
+  z-index: 2;
 }
 
 .arrow {
@@ -38,6 +55,7 @@
   background-size: contain; /* Ensure the image fits within the element */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
+  z-index: 2;
 }
 
 * {
@@ -137,6 +155,7 @@ body {
   font-size: 20px;
   line-height: 1.5;
   font-weight: bold;
+  z-index: 2;
 }
 
 .win-message {
@@ -152,6 +171,7 @@ body {
   font-size: 20px;
   line-height: 1.5;
   font-weight: bold;
+  z-index: 2;
 }
 
 .pause-content {
