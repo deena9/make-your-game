@@ -144,6 +144,11 @@ document.addEventListener("DOMContentLoaded", function () {
   requestAnimationFrame(renderFps);
 });
 
+function randomAnimals() {
+  const randomNum = Math.floor(Math.random() * 3) + 1;
+  return randomNum;
+}
+
 function updateTimer() {
   if (paused) return; // Don't update the timer if paused
 
@@ -164,6 +169,8 @@ function createBoxes(boxes, allBoxProperties) {
 
   const box = document.createElement("div");
   box.classList.add("box");
+
+  box.style.backgroundImage = `url('./assets/${randomAnimals()}.png')`;
 
   let boxX = Math.random() * (containerRect.width - 50); // Relative to container
   let boxY = Math.random() * (containerRect.height - 50); // Relative to container
