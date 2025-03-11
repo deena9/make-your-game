@@ -134,13 +134,15 @@ button {
   color: white;
   cursor: pointer;
   transition: 0.3s;
+  user-select: none; /* Prevents text selection */
+  cursor: default; /* Prevents hand cursor */
 }
 
-button:hover {
+/*button:hover {
   background: white;
   color: black;
   text-shadow: none;
-}
+}*/
 
 footer {
   font-size: 14px;

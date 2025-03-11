@@ -119,10 +119,11 @@ function restartGame() {
   window.location.reload(); // Reload the page to restart the game
 }
 
-function startGame() {
+//is this block needed?
+/*function startGame() {
   window.location.href = "index.html";
   document.removeEventListener("keydown", startGame);
-}
+}*/
 
 // FPS counter
 document.addEventListener("DOMContentLoaded", function () {
