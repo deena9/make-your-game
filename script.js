@@ -2,10 +2,10 @@ let paused = false; // Track the paused state
 let pauseMenu; // Store the pause menu element
 let timerInterval; // Store the timer interval ID
 
-const topOffset = 30;
+const topOffset = 50;
 const botOffset = 50;
-const leftOffset = 115;
-const rightOffset = 100;
+const leftOffset = 78;
+const rightOffset = 80;
 
 document.addEventListener("DOMContentLoaded", function () {
   const isGamePage = document.getElementById("counter") !== null;
