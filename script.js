@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isGamePage) {
     const boxes = document.createElement("div");
     boxes.classList.add("boxes-container");
-    boxes.setAttribute("id", "boxes-container"); // Ensure ID is set
     document.body.appendChild(boxes); // Append to DOM before calling createBoxes()
 
     const arrow = document.createElement("div");
@@ -217,7 +216,7 @@ function moveBoxes(props, isEnemy) {
     return;
   }
 
-  const boxesContainer = document.getElementById("boxes-container");
+  const boxesContainer = document.querySelector(".boxes-container");
   const containerRect = boxesContainer.getBoundingClientRect();
 
   if (!isEnemy) {
