@@ -168,11 +168,18 @@ function createBoxes(boxes, allBoxProperties) {
 
   let boxX = Math.random() * (containerRect.width - 50); // Relative to container
   let boxY = Math.random() * (containerRect.height - 50); // Relative to container
-  
+
   let boxDx = Math.random() * 4 - 2;
   let boxDy = Math.random() * 4 - 2;
 
-  const boxProperties = { boxX, boxY, boxDx, boxDy, box, speedIncreased: false };
+  const boxProperties = {
+    boxX,
+    boxY,
+    boxDx,
+    boxDy,
+    box,
+    speedIncreased: false,
+  };
 
   moveBoxes(boxProperties, false);
   boxes.appendChild(box);
@@ -186,11 +193,18 @@ function createEnemies(boxes, allEnemiesProperties) {
 
   let enemyX = Math.random() * (containerRect.width - 100);
   let enemyY = Math.random() * (containerRect.height - 100);
-  
+
   let enemyDx = Math.random() * 4 - 2;
   let enemyDy = Math.random() * 4 - 2;
 
-  const enemyProperties = { enemyX, enemyY, enemyDx, enemyDy, box: enemy, speedIncreased: false };
+  const enemyProperties = {
+    enemyX,
+    enemyY,
+    enemyDx,
+    enemyDy,
+    box: enemy,
+    speedIncreased: false,
+  };
 
   moveBoxes(enemyProperties, true);
   boxes.appendChild(enemy);
@@ -212,24 +226,23 @@ function moveBoxes(props, isEnemy) {
 
     // Ensure box stays within the container boundaries
     if (props.boxX >= containerRect.width - 50) {
-      props.boxX = containerRect.width - 50;
+      //props.boxX = containerRect.width - 50;
       props.boxDx *= -1;
     }
     if (props.boxX <= 0) {
-      props.boxX = 0;
+      //props.boxX = 0;
       props.boxDx *= -1;
     }
     if (props.boxY >= containerRect.height - 50) {
-      props.boxY = containerRect.height - 50;
+      //props.boxY = containerRect.height - 50;
       props.boxDy *= -1;
     }
     if (props.boxY <= 0) {
-      props.boxY = 0;
+      //props.boxY = 0;
       props.boxDy *= -1;
     }
 
-    props.box.style.left = `${props.boxX}px`;
-    props.box.style.top = `${props.boxY}px`;
+    props.box.style.transform = `translate(${props.boxX}px, ${props.boxY}px)`;
 
     requestAnimationFrame(() => moveBoxes(props, isEnemy));
   } else {
@@ -255,11 +268,16 @@ function moveBoxes(props, isEnemy) {
     props.enemyY += props.enemyDy;
 
     // Ensure enemy stays inside the box
-    props.enemyX = Math.min(Math.max(props.enemyX, 0), containerRect.width - 100);
-    props.enemyY = Math.min(Math.max(props.enemyY, 0), containerRect.height - 100);
+    props.enemyX = Math.min(
+      Math.max(props.enemyX, 0),
+      containerRect.width - 100
+    );
+    props.enemyY = Math.min(
+      Math.max(props.enemyY, 0),
+      containerRect.height - 100
+    );
 
-    props.box.style.left = `${props.enemyX}px`;
-    props.box.style.top = `${props.enemyY}px`;
+    props.box.style.transform = `translate(${props.enemyX}px, ${props.enemyY}px)`;
 
     requestAnimationFrame(() => moveBoxes(props, isEnemy));
   }
@@ -267,7 +285,7 @@ function moveBoxes(props, isEnemy) {
 
 function moveWithKeys(boxes, arrow, allBoxProperties) {
   const containerRect = boxes.getBoundingClientRect(); // Directly use 'boxes'
-  
+
   let x = containerRect.left + containerRect.width / 2;
   let y = containerRect.top + containerRect.height / 2;
   const step = 5; // Adjust the step size for smoother movement
@@ -414,7 +432,7 @@ function updateScore() {
   document.getElementById("counter").textContent = count;
 
   // Check for win condition
-  if (count >=9) {
+  if (count >= 9) {
     showWinMessage();
   }
 }
@@ -456,15 +474,15 @@ function checkGameOver() {
             <button id="restartBtn">Press Enter to restart</button>
           </div>
         `;
-        document.body.appendChild(pauseMenu);
+    document.body.appendChild(pauseMenu);
+    paused = true;
   }
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === 'Enter') {
-        restartGame(); // Use Enter to restart when the game is paused
-      } 
+    if (e.key === "Enter") {
+      restartGame(); // Use Enter to restart when the game is paused
     }
-  );
+  });
 }
 
 function updateLife() {
@@ -476,4 +494,3 @@ function updateLife() {
   }
   checkGameOver();
 }
-
