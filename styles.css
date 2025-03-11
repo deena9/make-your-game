@@ -5,7 +5,7 @@
   height: 768px; /* Adjust based on header/footer height */
   width: 1366px;
   overflow: hidden; /* Prevent elements from spilling out */
-  background-color: white;
+  background-image: url("./assets/grassField.png");
   border: 5px solid #ff00ff;
   margin: auto; /* Center the game box */
 }
@@ -15,26 +15,29 @@
   width: 70px;
   height: 70px;
   /*background-image: url(./assets/cows.png);*/
-  background-size: cover;
+  background-size: contain;
+  background-image: center;
+  background-repeat: no-repeat;
 }
 
 .enemy {
   position: absolute;
-  width: 0px;
-  height: 0px;
-  border-style: solid;
-  border-width: 0 50px 100px 50px;
-  border-color: transparent transparent #ff4532 transparent;
-  transform: rotate(0deg);
-  background-color: green;
+  width: 70px;
+  height: 70px;
+  background-size: contain;
+  background-image: center;
+  background-repeat: no-repeat;
 }
 
 .arrow {
   position: absolute;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background-color: red;
+  background-image: url("./assets/ufo.png");
+  background-size: contain; /* Ensure the image fits within the element */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
 }
 
 * {

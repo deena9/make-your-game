@@ -149,6 +149,12 @@ function randomAnimals() {
   return randomNum;
 }
 
+function randomjets() {
+  for (let i = 4; i <= 5; i++) {
+    return i
+  }
+}
+
 function updateTimer() {
   if (paused) return; // Don't update the timer if paused
 
@@ -172,8 +178,8 @@ function createBoxes(boxes, allBoxProperties) {
 
   box.style.backgroundImage = `url('./assets/${randomAnimals()}.png')`;
 
-  let boxX = Math.random() * (containerRect.width - 50); // Relative to container
-  let boxY = Math.random() * (containerRect.height - 50); // Relative to container
+  let boxX = Math.random() * (containerRect.width - 70); // Relative to container
+  let boxY = Math.random() * (containerRect.height - 70); // Relative to container
 
   let boxDx = Math.random() * 4 - 2;
   let boxDy = Math.random() * 4 - 2;
@@ -196,6 +202,8 @@ function createEnemies(boxes, allEnemiesProperties) {
   const containerRect = boxes.getBoundingClientRect(); // Directly use 'boxes'
   const enemy = document.createElement("div");
   enemy.classList.add("enemy");
+
+  enemy.style.backgroundImage = `url('./assets/${randomjets()}.png')`;
 
   let enemyX = Math.random() * (containerRect.width - 100);
   let enemyY = Math.random() * (containerRect.height - 100);
@@ -231,16 +239,16 @@ function moveBoxes(props, isEnemy) {
     props.boxY += props.boxDy;
 
     // Ensure box stays within the container boundaries
-    if (props.boxX >= containerRect.width - 50) {
-      //props.boxX = containerRect.width - 50;
+    if (props.boxX >= containerRect.width - 70) {
+      //props.boxX = containerRect.width - 70;
       props.boxDx *= -1;
     }
     if (props.boxX <= 0) {
       //props.boxX = 0;
       props.boxDx *= -1;
     }
-    if (props.boxY >= containerRect.height - 50) {
-      //props.boxY = containerRect.height - 50;
+    if (props.boxY >= containerRect.height - 70) {
+      //props.boxY = containerRect.height - 70;
       props.boxDy *= -1;
     }
     if (props.boxY <= 0) {
@@ -362,8 +370,8 @@ function isNearby(boxes, arrow, allBoxProperties) {
         )
       ) {
         if (
-          Math.abs(boxProps.dx) < 50 &&
-          Math.abs(boxProps.dy) < 50 &&
+          Math.abs(boxProps.dx) < 70 &&
+          Math.abs(boxProps.dy) < 70 &&
           !boxProps.speedIncreased
         ) {
           boxProps.dx *= 1.5;
