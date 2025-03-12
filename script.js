@@ -155,7 +155,7 @@ function randomAnimals() {
   return randomNum;
 }
 
-let jetNumber = 4
+let jetNumber = 4;
 function randomjets() {
   const currentJet = jetNumber;
   jetNumber++;
@@ -409,6 +409,10 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
         arrowRect.bottom >= boxRect.top &&
         arrowRect.top <= boxRect.bottom
       ) {
+        const captureSound = new Audio(
+          "./assets/sound_effects/captureSound.wav"
+        );
+        captureSound.play();
         allBoxProperties.splice(i, 1);
         boxes.removeChild(boxProps.box);
         updateScore();
@@ -428,6 +432,8 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
         arrowRect.top <= enemyRect.bottom
       ) {
         if (!collisionCooldown) {
+          const hitSound = new Audio("./assets/sound_effects/hitSound.wav");
+          hitSound.play();
           updateLife();
           collisionCooldown = true;
           setTimeout(() => {
@@ -463,6 +469,8 @@ function updateScore() {
 }
 
 function showWinMessage() {
+  const winSound = new Audio("./assets/sound_effects/winSound.wav");
+  winSound.play();
   const winMessage = document.createElement("div");
   winMessage.classList.add("pause-menu");
   winMessage.innerHTML = `
