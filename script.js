@@ -155,10 +155,11 @@ function randomAnimals() {
   return randomNum;
 }
 
+let jetNumber = 4
 function randomjets() {
-  for (let i = 4; i <= 5; i++) {
-    return i
-  }
+  const currentJet = jetNumber;
+  jetNumber++;
+  return currentJet;
 }
 
 function updateTimer() {
@@ -184,8 +185,12 @@ function createBoxes(boxes, allBoxProperties) {
 
   box.style.backgroundImage = `url('./assets/${randomAnimals()}.png')`;
 
-  let boxX = Math.random() * (containerRect.width - (70 + leftOffset + rightOffset)) + leftOffset; // Relative to container
-  let boxY = Math.random() * (containerRect.height - (70 + topOffset + botOffset)) + topOffset; // Relative to container
+  let boxX =
+    Math.random() * (containerRect.width - (70 + leftOffset + rightOffset)) +
+    leftOffset; // Relative to container
+  let boxY =
+    Math.random() * (containerRect.height - (70 + topOffset + botOffset)) +
+    topOffset; // Relative to container
 
   let boxDx = Math.random() * 4 - 2;
   let boxDy = Math.random() * 4 - 2;
@@ -245,11 +250,11 @@ function moveBoxes(props, isEnemy) {
     props.boxY += props.boxDy;
 
     // Ensure box stays within the container boundaries
-    if (props.boxX >= containerRect.width - (70 + rightOffset) ) {
+    if (props.boxX >= containerRect.width - (70 + rightOffset)) {
       //props.boxX = containerRect.width - 70;
       props.boxDx *= -1;
     }
-    if (props.boxX <= (0 + leftOffset)) {
+    if (props.boxX <= 0 + leftOffset) {
       //props.boxX = 0;
       props.boxDx *= -1;
     }
@@ -257,7 +262,7 @@ function moveBoxes(props, isEnemy) {
       //props.boxY = containerRect.height - 70;
       props.boxDy *= -1;
     }
-    if (props.boxY <= (0 + topOffset)) {
+    if (props.boxY <= 0 + topOffset) {
       //props.boxY = 0;
       props.boxDy *= -1;
     }
@@ -496,6 +501,8 @@ function checkGameOver() {
         `;
     document.body.appendChild(pauseMenu);
     paused = true;
+    const gameOverSound = new Audio("./assets/sound_effects/gameOver.mp3");
+    gameOverSound.play();
   }
 
   document.addEventListener("keydown", (e) => {
