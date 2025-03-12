@@ -432,7 +432,7 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
         arrowRect.top <= enemyRect.bottom
       ) {
         if (!collisionCooldown) {
-          const hitSound = new Audio("./assets/sound_effects/hitSound.wav");
+          const hitSound = new Audio("./assets/sound_effects/hitSound_even_shorter.wav");
           hitSound.play();
           updateLife();
           collisionCooldown = true;
@@ -510,7 +510,10 @@ function checkGameOver() {
     document.body.appendChild(pauseMenu);
     paused = true;
     const gameOverSound = new Audio("./assets/sound_effects/gameOver.mp3");
-    gameOverSound.play();
+    setTimeout(() => {
+      gameOverSound.play();
+    }, 500);
+    
   }
 
   document.addEventListener("keydown", (e) => {
