@@ -6,7 +6,7 @@
   width: 1366px;
   overflow: hidden; /* Prevent elements from spilling out */
   margin: auto; /* Center the game box */
-  background-image: url("./assets/fenced_farm.png");
+  background-image: url("./assets/farm.png");
   background-size: cover;
 }
 
@@ -36,7 +36,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background-image: url("./assets/ufo.png");
+  background-image: url("./assets/ufo2.png");
   background-size: contain; /* Ensure the image fits within the element */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
