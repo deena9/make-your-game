@@ -1,6 +1,8 @@
 let paused = false; // Track the paused state
 let pauseMenu; // Store the pause menu element
 let timerInterval; // Store the timer interval ID
+let gameOver = false; // Track the game over state
+let gameWin = false; // Track the game win state
 
 const topOffset = 50;
 const botOffset = 50;
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     moveWithKeys(boxes, arrow, allBoxProperties);
 
     function checkProximity() {
-      if (!paused) {
+      if (!paused && !gameOver && !gameWin) {
         isNearby(boxes, arrow, allBoxProperties);
       }
       setTimeout(checkProximity, 100);
@@ -33,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     checkProximity();
 
     function checkEnemyCollisions() {
-      if (!paused) {
+      if (!paused && !gameOver && !gameWin) {
         isOverlap(boxes, arrow, [], allEnemiesProperties);
       }
       setTimeout(checkEnemyCollisions, 100);
@@ -43,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function checkAndCreateEnemies() {
       if (
         !paused &&
+        !gameOver &&
+        !gameWin &&
         allBoxProperties.length <= 5 &&
         allEnemiesProperties.length === 0
       ) {
@@ -69,10 +73,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Consolidated keydown event listener for pause/resume and restart functionality
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      togglePause(); // Use Escape to toggle pause/resume
+    if (e.key === "Escape" && !gameOver && !gameWin) {
+      togglePause(); // Use Escape to to ggle pause/resume
     } else if (e.key === "Enter") {
-      if (paused) {
+      if (paused || gameOver || gameWin) {
         restartGame(); // Use Enter to restart when the game is paused
       }
     }
@@ -163,7 +167,7 @@ function randomjets() {
 }
 
 function updateTimer() {
-  if (paused) return; // Don't update the timer if paused
+  if (paused || gameOver || gameWin) return; // Don't update the timer if paused
 
   let timer = parseInt(document.getElementById("timer").textContent);
   if (timer <= 0) {
@@ -439,8 +443,12 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
           );
           arrow.classList.add("hit-glow");
           setTimeout(() => {
-            element.classList.add('fade-out');
-          }, 1000);
+            arrow.classList.remove('hit-glow'); 
+            arrow.classList.add('fade-out');
+          }, 500);
+          setTimeout(()=>{
+            arrow.classList.remove('fade-out'); 
+          }, 500);
           hitSound.play();
           updateLife();
           collisionCooldown = true;
@@ -477,6 +485,8 @@ function updateScore() {
 }
 
 function showWinMessage() {
+  gameWin = true;
+  paused = true;
   const winSound = new Audio("./assets/sound_effects/winSound.wav");
   winSound.play();
   const winMessage = document.createElement("div");
@@ -489,17 +499,15 @@ function showWinMessage() {
   `;
   document.body.appendChild(winMessage);
 
-  // Add event listener to restart the game when Enter is pressed
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      restartGame();
-    }
-  });
+  // // Add event listener to restart the game when Enter is pressed
+  // document.addEventListener("keydown", (e) => {
+  //   if (e.key === "Enter") {
+  //     restartGame();
+  //   }
+  // });
 
-  paused = true; // Pause the game when the player wins
+  // paused = true; // Pause the game when the player wins
 }
-
-let gameOver = false;
 
 function checkGameOver() {
   if (gameOver) return;
@@ -507,6 +515,7 @@ function checkGameOver() {
   let timer = parseInt(document.getElementById("timer").textContent);
   if (life <= 0 || timer <= 0) {
     gameOver = true;
+    paused = true;
     pauseMenu = document.createElement("div");
     pauseMenu.classList.add("pause-menu");
     pauseMenu.innerHTML = `
@@ -523,11 +532,11 @@ function checkGameOver() {
     }, 500);
   }
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      restartGame(); // Use Enter to restart when the game is paused
-    }
-  });
+  // document.addEventListener("keydown", (e) => {
+  //   if (e.key === "Enter") {
+  //     restartGame(); // Use Enter to restart when the game is paused
+  //   }
+  // });
 }
 
 function updateLife() {
