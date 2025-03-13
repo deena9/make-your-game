@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const arrow = document.createElement("div");
     arrow.classList.add("arrow");
-    document.body.appendChild(arrow);
+    boxes.appendChild(arrow);
 
     const allBoxProperties = [];
     const allEnemiesProperties = [];
@@ -335,19 +335,19 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
     let moved = false;
 
     if (keys["ArrowLeft"]) {
-      x = Math.max(containerRect.left, x - step);
+      x = Math.max(0, x - step);
       moved = true;
     }
     if (keys["ArrowRight"]) {
-      x = Math.min(containerRect.right - arrow.clientWidth, x + step);
+      x = Math.min(containerRect.width - 70, x + step);
       moved = true;
     }
     if (keys["ArrowUp"]) {
-      y = Math.max(containerRect.top, y - step);
+      y = Math.max(0, y - step);
       moved = true;
     }
     if (keys["ArrowDown"]) {
-      y = Math.min(containerRect.bottom - arrow.clientHeight, y + step);
+      y = Math.min(containerRect.height - 70, y + step);
       moved = true;
     }
 
@@ -411,8 +411,12 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
           "./assets/sound_effects/captureSound.wav"
         );
         captureSound.play();
+
+        boxProps.box.classList.add("glow-fade");
         allBoxProperties.splice(i, 1);
-        boxes.removeChild(boxProps.box);
+        setTimeout(() => {
+          boxes.removeChild(boxProps.box);
+        }, 2000); 
         updateScore();
         break;
       }
@@ -433,6 +437,10 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
           const hitSound = new Audio(
             "./assets/sound_effects/hitSound_even_shorter.wav"
           );
+          arrow.classList.add("hit-glow");
+          setTimeout(() => {
+            element.classList.add('fade-out');
+          }, 1000);
           hitSound.play();
           updateLife();
           collisionCooldown = true;
