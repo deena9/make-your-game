@@ -28,6 +28,7 @@
 }
 
 .hit-glow.fade-out {
+  /*opacity: 0;  /* Fades the glow */
   box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); /* Remove glow */
   opacity: 1; /* Keep the arrow visible */
 }
@@ -50,7 +51,7 @@
   width: 70px;
   height: 70px;
   background-size: contain;
-  background-image: center;
+  background-position: center;
   background-repeat: no-repeat;
   z-index: 2;
   transform: translateZ(0);
