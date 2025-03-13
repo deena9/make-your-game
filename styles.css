@@ -19,6 +19,8 @@
   background-position: center;
   background-image: url("./assets/cows.png"); /* Keep box background */
   z-index: 2; /* Ensure boxes are below the background image */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .enemy {
@@ -29,10 +31,14 @@
   background-image: center;
   background-repeat: no-repeat;
   z-index: 2;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .arrow {
   position: absolute;
+  left: 0;
+  top: 0;
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -41,6 +47,8 @@
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   z-index: 2;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 * {

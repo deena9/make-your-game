@@ -250,19 +250,19 @@ function moveBoxes(props, isEnemy) {
     props.boxY += props.boxDy;
 
     // Ensure box stays within the container boundaries
-    if (props.boxX >= containerRect.width - (70 + rightOffset)) {
+    if (props.boxX >= containerRect.width - 70) {
       //props.boxX = containerRect.width - 70;
       props.boxDx *= -1;
     }
-    if (props.boxX <= 0 + leftOffset) {
+    if (props.boxX <= 0) {
       //props.boxX = 0;
       props.boxDx *= -1;
     }
-    if (props.boxY >= containerRect.height - (70 + botOffset)) {
+    if (props.boxY >= containerRect.height - 70) {
       //props.boxY = containerRect.height - 70;
       props.boxDy *= -1;
     }
-    if (props.boxY <= 0 + topOffset) {
+    if (props.boxY <= 0) {
       //props.boxY = 0;
       props.boxDy *= -1;
     }
@@ -311,13 +311,12 @@ function moveBoxes(props, isEnemy) {
 function moveWithKeys(boxes, arrow, allBoxProperties) {
   const containerRect = boxes.getBoundingClientRect(); // Directly use 'boxes'
 
-  let x = containerRect.left + containerRect.width / 2;
-  let y = containerRect.top + containerRect.height / 2;
+  let x = containerRect.width / 2;
+  let y = containerRect.height / 2;
   const step = 5; // Adjust the step size for smoother movement
   const keys = {};
 
-  arrow.style.left = `${x}px`;
-  arrow.style.top = `${y}px`;
+  arrow.style.transform = `translate(${x}px, ${y}px)`;
 
   document.addEventListener("keydown", (e) => {
     keys[e.key] = true;
@@ -357,8 +356,7 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
     }
 
     if (moved) {
-      arrow.style.left = `${x}px`;
-      arrow.style.top = `${y}px`;
+      arrow.style.transform = `translate(${x}px, ${y}px)`;
     }
     requestAnimationFrame(moveArrow);
   }
@@ -432,7 +430,9 @@ function isOverlap(boxes, arrow, allBoxProperties, allEnemiesProperties) {
         arrowRect.top <= enemyRect.bottom
       ) {
         if (!collisionCooldown) {
-          const hitSound = new Audio("./assets/sound_effects/hitSound_even_shorter.wav");
+          const hitSound = new Audio(
+            "./assets/sound_effects/hitSound_even_shorter.wav"
+          );
           hitSound.play();
           updateLife();
           collisionCooldown = true;
@@ -513,7 +513,6 @@ function checkGameOver() {
     setTimeout(() => {
       gameOverSound.play();
     }, 500);
-    
   }
 
   document.addEventListener("keydown", (e) => {
