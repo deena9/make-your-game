@@ -12,19 +12,18 @@ const rightOffset = 80
 document.addEventListener("DOMContentLoaded", function () {
   const isGamePage = document.getElementById("counter") !== null
 
-  if (isGamePage) {
-    const boxes = document.createElement("div")
-    boxes.classList.add("boxes-container")
-    document.body.appendChild(boxes) // Append to DOM before calling createBoxes()
+  const boxes = document.createElement("div")
+  boxes.classList.add("boxes-container")
+  document.body.appendChild(boxes) // Append to DOM before calling createBoxes()
 
-    const arrow = document.createElement("div")
-    arrow.classList.add("arrow")
-    boxes.appendChild(arrow)
+  const arrow = document.createElement("div")
+  arrow.classList.add("arrow")
+  boxes.appendChild(arrow)
 
-    const allBoxProperties = []
-    const allEnemiesProperties = []
+  const allBoxProperties = []
+  const allEnemiesProperties = []
 
-    moveWithKeys(boxes, arrow, allBoxProperties)
+  moveWithKeys(boxes, arrow, allBoxProperties)
 
     function checkProximity() {
       if (!paused && !gameOver && !gameWin) {
@@ -58,18 +57,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     setTimeout(() => checkAndCreateEnemies(), 5000)
 
-    // Start the timer when the game starts
-    timerInterval = setTimeout(updateTimer, 1000)
+  // Start the timer when the game starts
+  timerInterval = setTimeout(updateTimer, 1000)
 
-    for (let i = 1; i < 10; i++) {
-      createBoxes(boxes, allBoxProperties)
-    }
-
-    // Add the pause menu
-    createPauseMenu()
-  } else {
-    document.addEventListener("keydown", startGame)
+  for (let i = 1; i < 10; i++) {
+    createBoxes(boxes, allBoxProperties)
   }
+
+  // Add the pause menu
+  createPauseMenu()
 
   // Consolidated keydown event listener for pause/resume and restart functionality
   document.addEventListener("keydown", (e) => {
@@ -189,12 +185,8 @@ function createBoxes(boxes, allBoxProperties) {
 
   box.style.backgroundImage = `url('./assets/${randomAnimals()}.png')`
 
-  let boxX =
-    Math.random() * (containerRect.width - (70 + leftOffset + rightOffset)) +
-    leftOffset // Relative to container
-  let boxY =
-    Math.random() * (containerRect.height - (70 + topOffset + botOffset)) +
-    topOffset // Relative to container
+  let boxX = Math.random() * (containerRect.width - 70) // Remove offsets
+  let boxY = Math.random() * (containerRect.height - 70)
 
   let boxDx = Math.random() * 4 - 2
   let boxDy = Math.random() * 4 - 2
@@ -204,6 +196,8 @@ function createBoxes(boxes, allBoxProperties) {
     boxY,
     boxDx,
     boxDy,
+    originalDx: boxDx, // Store initial speed
+    originalDy: boxDy, // Store initial speed
     box,
     speedIncreased: false,
   }
@@ -220,8 +214,8 @@ function createEnemies(boxes, allEnemiesProperties) {
 
   enemy.style.backgroundImage = `url('./assets/${randomjets()}.png')`
 
-  let enemyX = Math.random() * (containerRect.width - 100)
-  let enemyY = Math.random() * (containerRect.height - 100)
+  let enemyX = Math.random() * (containerRect.width - 70)
+  let enemyY = Math.random() * (containerRect.height - 70)
 
   let enemyDx = Math.random() * 4 - 2
   let enemyDy = Math.random() * 4 - 2
@@ -271,6 +265,8 @@ function moveBoxes(props, isEnemy) {
       props.boxDy *= -1
     }
 
+    props.boxX = Math.max(0, Math.min(props.boxX, containerRect.width - 70))
+    props.boxY = Math.max(0, Math.min(props.boxY, containerRect.height - 70))
     props.box.style.transform = `translate(${props.boxX}px, ${props.boxY}px)`
 
     requestAnimationFrame(() => moveBoxes(props, isEnemy))
@@ -282,14 +278,14 @@ function moveBoxes(props, isEnemy) {
 
     let dirX = arrowX - props.enemyX
     let dirY = arrowY - props.enemyY
-    let length = Math.sqrt(dirX * dirX + dirY * dirY)
+    let distance = Math.sqrt(dirX * dirX + dirY * dirY)
 
-    if (length > 0) {
-      dirX /= length
-      dirY /= length
+    if (distance > 0) {
+      dirX /= distance
+      dirY /= distance
     }
 
-    const speed = 2
+    const speed = 3
     props.enemyDx = dirX * speed
     props.enemyDy = dirY * speed
 
@@ -297,13 +293,10 @@ function moveBoxes(props, isEnemy) {
     props.enemyY += props.enemyDy
 
     // Ensure enemy stays inside the box
-    props.enemyX = Math.min(
-      Math.max(props.enemyX, 0),
-      containerRect.width - 100
-    )
-    props.enemyY = Math.min(
-      Math.max(props.enemyY, 0),
-      containerRect.height - 100
+    props.enemyX = Math.max(0, Math.min(props.enemyX, containerRect.width - 70))
+    props.enemyY = Math.max(
+      0,
+      Math.min(props.enemyY, containerRect.height - 70)
     )
 
     props.box.style.transform = `translate(${props.enemyX}px, ${props.enemyY}px)`
@@ -369,10 +362,15 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
 
 function isNearby(boxes, arrow, allBoxProperties) {
   const arrowRect = arrow.getBoundingClientRect()
-  for (let i = 0; i < boxes.children.length; i++) {
-    const box = boxes.children[i]
-    const boxRect = boxes.children[i].getBoundingClientRect()
+  // Filter only elements with class 'box'
+  const boxElements = Array.from(boxes.children).filter((child) =>
+    child.classList.contains("box")
+  )
+
+  for (const box of boxElements) {
+    const boxRect = box.getBoundingClientRect()
     const boxProps = allBoxProperties.find((props) => props.box === box)
+
     if (boxProps) {
       if (
         !(
@@ -390,6 +388,13 @@ function isNearby(boxes, arrow, allBoxProperties) {
           boxProps.boxDx *= 1.5
           boxProps.boxDy *= 1.5
           boxProps.speedIncreased = true
+
+          // Reset speed after 2 seconds
+          setTimeout(() => {
+            boxProps.boxDx = boxProps.originalDx
+            boxProps.boxDy = boxProps.originalDy
+            boxProps.speedIncreased = false
+          }, 2000)
         }
       }
     }
