@@ -4,14 +4,8 @@ let timerInterval; // Store the timer interval ID
 let gameOver = false; // Track the game over state
 let gameWin = false; // Track the game win state
 
-const topOffset = 50
-const botOffset = 50
-const leftOffset = 78
-const rightOffset = 80
 
 document.addEventListener("DOMContentLoaded", function () {
-  const isGamePage = document.getElementById("counter") !== null
-
   const boxes = document.createElement("div")
   boxes.classList.add("boxes-container")
   document.body.appendChild(boxes) // Append to DOM before calling createBoxes()
@@ -60,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Start the timer when the game starts
   timerInterval = setTimeout(updateTimer, 1000)
 
-  for (let i = 1; i < 10; i++) {
+  for (let i = 1; i <= 10; i++) {
     createBoxes(boxes, allBoxProperties)
   }
 
@@ -70,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Consolidated keydown event listener for pause/resume and restart functionality
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !gameOver && !gameWin) {
-      togglePause(); // Use Escape to to ggle pause/resume
+      togglePause(); // Use Escape to toggle pause/resume
     } else if (e.key === "Enter") {
       if (paused || gameOver || gameWin) {
         restartGame(); // Use Enter to restart when the game is paused
@@ -118,12 +112,6 @@ function resumeGame() {
 function restartGame() {
   window.location.reload() // Reload the page to restart the game
 }
-
-//is this block needed?
-/*function startGame() {
-  window.location.href = "index.html";
-  document.removeEventListener("keydown", startGame);
-}*/
 
 // FPS counter
 document.addEventListener("DOMContentLoaded", function () {
@@ -188,8 +176,17 @@ function createBoxes(boxes, allBoxProperties) {
   let boxX = Math.random() * (containerRect.width - 70) // Remove offsets
   let boxY = Math.random() * (containerRect.height - 70)
 
-  let boxDx = Math.random() * 4 - 2
-  let boxDy = Math.random() * 4 - 2
+  let boxDx = Math.random() * 2 + 1;  // Random value between 1 and 2
+  let boxDy = Math.random() * 2 + 1;  // Random value between 1 and 2
+
+  // Ensure both X and Y move in the same direction
+  if (Math.random() < 0.5) {
+      boxDx = -boxDx; // Set both to negative
+      boxDy = -boxDy; // Set both to negative
+  }
+
+  boxDx = Math.max(Math.min(boxDx, 2), -2);  // Ensure the value is between -2 and 2
+  boxDy = Math.max(Math.min(boxDy, 2), -2);  // Ensure the value is between -2 and 2
 
   const boxProperties = {
     boxX,
@@ -217,8 +214,17 @@ function createEnemies(boxes, allEnemiesProperties) {
   let enemyX = Math.random() * (containerRect.width - 70)
   let enemyY = Math.random() * (containerRect.height - 70)
 
-  let enemyDx = Math.random() * 4 - 2
-  let enemyDy = Math.random() * 4 - 2
+  let enemyDx = Math.random() * 2 + 1;  // Random value between 1 and 2
+  let enemyDy = Math.random() * 2 + 1;  // Random value between 1 and 2
+  
+  // Ensure both X and Y move in the same direction
+  if (Math.random() < 0.5) {
+      enemyDx = -enemyDx; // Set both to negative
+      enemyDy = -enemyDy; // Set both to negative
+  }
+  
+  enemyDx = Math.max(Math.min(enemyDx, 2), -2);  // Ensure the value is between -2 and 2
+  enemyDy = Math.max(Math.min(enemyDy, 2), -2);  // Ensure the value is between -2 and 2
 
   const enemyProperties = {
     enemyX,
@@ -265,8 +271,6 @@ function moveBoxes(props, isEnemy) {
       props.boxDy *= -1
     }
 
-    props.boxX = Math.max(0, Math.min(props.boxX, containerRect.width - 70))
-    props.boxY = Math.max(0, Math.min(props.boxY, containerRect.height - 70))
     props.box.style.transform = `translate(${props.boxX}px, ${props.boxY}px)`
 
     requestAnimationFrame(() => moveBoxes(props, isEnemy))
@@ -362,40 +366,31 @@ function moveWithKeys(boxes, arrow, allBoxProperties) {
 
 function isNearby(boxes, arrow, allBoxProperties) {
   const arrowRect = arrow.getBoundingClientRect()
-  // Filter only elements with class 'box'
-  const boxElements = Array.from(boxes.children).filter((child) =>
-    child.classList.contains("box")
-  )
 
-  for (const box of boxElements) {
-    const boxRect = box.getBoundingClientRect()
-    const boxProps = allBoxProperties.find((props) => props.box === box)
+  for (const boxProps of allBoxProperties) {
+    const boxRect = boxProps.box.getBoundingClientRect()
 
-    if (boxProps) {
+    if (
+      !(
+        arrowRect.right < boxRect.left - 30 ||
+        arrowRect.left > boxRect.right + 30 ||
+        arrowRect.bottom < boxRect.top - 30 ||
+        arrowRect.top > boxRect.bottom + 30
+      )
+    ) {
       if (
-        !(
-          arrowRect.right < boxRect.left - 30 ||
-          arrowRect.left > boxRect.right + 30 ||
-          arrowRect.bottom < boxRect.top - 30 ||
-          arrowRect.top > boxRect.bottom + 30
-        )
+        !boxProps.speedIncreased
       ) {
-        if (
-          Math.abs(boxProps.boxDx) < 70 &&
-          Math.abs(boxProps.boxDy) < 70 &&
-          !boxProps.speedIncreased
-        ) {
-          boxProps.boxDx *= 1.5
-          boxProps.boxDy *= 1.5
-          boxProps.speedIncreased = true
+        boxProps.boxDx *= 1.5
+        boxProps.boxDy *= 1.5
+        boxProps.speedIncreased = true
 
-          // Reset speed after 2 seconds
-          setTimeout(() => {
-            boxProps.boxDx = boxProps.originalDx
-            boxProps.boxDy = boxProps.originalDy
-            boxProps.speedIncreased = false
-          }, 2000)
-        }
+        // Reset speed after 2 seconds
+        setTimeout(() => {
+          boxProps.boxDx = boxProps.originalDx
+          boxProps.boxDy = boxProps.originalDy
+          boxProps.speedIncreased = false
+        }, 2000)
       }
     }
   }
@@ -484,7 +479,7 @@ function updateScore() {
   document.getElementById("counter").textContent = count
 
   // Check for win condition
-  if (count >= 9) {
+  if (count === 10) {
     showWinMessage()
   }
 }
