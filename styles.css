@@ -138,7 +138,7 @@ body {
   box-shadow: 0 0 15px #ff00ff;
 }
 
-.pause-menu {
+.message-display {
   position: absolute;
   padding: 30px;
   background: rgba(0, 0, 0, 0.8);
@@ -152,9 +152,6 @@ body {
   line-height: 1.5;
   font-weight: bold;
   z-index: 2;
-}
-.pause-content {
-  text-align: center;
 }
 
 button {
