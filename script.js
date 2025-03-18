@@ -274,6 +274,7 @@ function moveBoxes(props, isEnemy) {
     let dirX = arrowX - props.enemyX;
     let dirY = arrowY - props.enemyY;
     let distance = Math.sqrt(dirX * dirX + dirY * dirY);
+    // diagonal movement accelerates the player. we can also include a speed variable to control the speed of the player that corresponds to the speed of the movement when it goes left or right.
 
     if (distance > 0) {
       dirX /= distance;
