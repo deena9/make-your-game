@@ -70,7 +70,7 @@
   background-size: contain; /* Ensure the image fits within the element */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
-  z-index: 2;
+  z-index: 3;
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
@@ -151,7 +151,7 @@ body {
   font-size: 20px;
   line-height: 1.5;
   font-weight: bold;
-  z-index: 2;
+  z-index: 8;
 }
 
 button {
